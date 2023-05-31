@@ -5,12 +5,13 @@ function formatDate(timestamp) {
     hours = `0${hours}`;
   }
   let minutes = now.getMinutes();
-  if (minutes < 0) {
+  if (minutes < 10) {
     minutes = `0${minutes}`;
   }
   let days = ["Sun", "Mon", "Tue", "Wed", "Thurs", "Fri", "Sat"];
   let day = days[now.getDay()];
-  return `${day} ${hours}:${minutes}`;
+  let year = now.getFullYear();
+  return `${year},${day} ${hours}:${minutes}`;
 }
 function showTemperature(response) {
   console.log(response.data);
@@ -21,6 +22,11 @@ function showTemperature(response) {
   let date = document.querySelector("#date");
   let description = document.querySelector("#description");
   temperature.innerHTML = Math.round(response.data.main.temp);
+  let iconElement = document.querySelector("#icon");
+  iconElement.setAttribute(
+    "src",
+    `https://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
+  );
   humidity.innerHTML = response.data.main.humidity;
   wind.innerHTML = Math.round(response.data.wind.speed);
   city.innerHTML = response.data.name;
