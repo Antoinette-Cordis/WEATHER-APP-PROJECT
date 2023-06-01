@@ -32,6 +32,8 @@ function showTemperature(response) {
   city.innerHTML = response.data.name;
   description.innerHTML = response.data.weather[0].description;
   date.innerHTML = formatDate(response.data.dt * 1000);
+  let forecastElement = response.data.daily;
+  let forecast = document.querySelector("#forecast");
 }
 function search(city) {
   let Apikey = "bd5b4461863eddaa6ced0a0a67989e0a";
