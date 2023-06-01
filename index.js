@@ -13,6 +13,49 @@ function formatDate(timestamp) {
   let year = now.getFullYear();
   return `${year},${day} ${hours}:${minutes}`;
 }
+function formatDay(timestamp) {
+  let date = newDate(timestamp * 1000);
+  let day = date.getDay();
+  let days = ["Thurs", "Fri", "Sat", "Sun", "Mon"];
+  return days[day];
+}
+function displayForecast(response) {
+  let forecast = response.data.daily;
+  let forecastElement = document.querySelector("#forecast");
+  let forecastHTML = `<div class="row">`;
+  forecast.forEach(function (forecastDay, index) {
+    if (index < 5) {
+      forecastHTML.forecastHTML +
+        `<div class="col-2">
+              <div class="weather-forecast-dates">${formatDay(
+                forecastDay.dt
+              )}</div>
+              <img
+                src="https://openweathermap.org/img/wn/${
+                  forecastDay.weather[0].icon
+                }@2x.png"
+                alt=""
+                width="40"
+              />
+              <div class="weather-forecast-temperature">
+                <span class="weather-forecast-temperature-max">${Math.round(
+                  forecastDay.temp.max
+                )}°</span>
+                <span class="weather-forecast-temperature-min">${Math.round(
+                  forecastDay.temp.min
+                )}°</span>
+              </div>
+            </div>`;
+    }
+  });
+  forecastHTML = forecastHTML + `</div>`;
+  forecastElement.innerHTML = forecastHTML;
+}
+function showForecast(coordinates) {
+  let apiKey = "bd5b4461863eddaa6ced0a0a67989e0a";
+  let apiUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${apiKey}&units=metric`;
+  axios.get(apiUrl).then(displayForecast);
+}
 function showTemperature(response) {
   console.log(response.data);
   let temperature = document.querySelector("#temperature");
@@ -32,8 +75,8 @@ function showTemperature(response) {
   city.innerHTML = response.data.name;
   description.innerHTML = response.data.weather[0].description;
   date.innerHTML = formatDate(response.data.dt * 1000);
-  let forecastElement = response.data.daily;
-  let forecast = document.querySelector("#forecast");
+
+  showForecast(response.data.coord);
 }
 function search(city) {
   let Apikey = "bd5b4461863eddaa6ced0a0a67989e0a";
